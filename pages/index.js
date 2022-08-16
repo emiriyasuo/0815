@@ -79,6 +79,8 @@ import Head from 'next/head';
 import Layout, { siteTitle } from '../components/layout';
 import utilStyles from '../styles/utils.module.css';
 import { getSortedPostsData } from '../lib/posts';
+import Link from 'next/link'
+import Date from '../components/date'
 
 
 export async function getStaticProps() {
@@ -93,16 +95,34 @@ export async function getStaticProps() {
 export default function Home({ allPostsData }) {
   return (
     <Layout home>
+      {/* ここのコードはそのまま */}
       <Head>
-        <title>{siteTitle}</title>
+        <title>postData.title</title>
       </Head>
       <section className={utilStyles.headingMd}>
-        <p>{`やすおえみりです`}</p>
+        <p>やすおえみりです</p>
         <p>
           (これは Next.js のサンプルページです - これから{' '}
           <a href="https://nextjs.org/learn">Next.js tutorial</a>{' '}
           のサイトにあるようなページを作っていきます。)
         </p>
+      </section>
+      {/* この <section> タグをすでにある <section> タグの下に追加 */}
+      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
+        <h2 className={utilStyles.headingLg}>Blog</h2>
+        <ul className={utilStyles.list}>
+          {allPostsData.map(({ id, date, title }) => (
+            <li className={utilStyles.listItem} key={id}>
+              <Link href={`/posts/${id}`}>
+              {title}
+              </Link>
+              <br />
+              <small className={utilStyles.lightText}>
+                <Date dateString={date} />
+              </small>
+            </li>
+          ))}
+        </ul>
       </section>
     </Layout>
   );

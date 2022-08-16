@@ -3,6 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
+// var remark = require('remark');
 
 const postsDirectory = path.join(process.cwd(), 'posts');
 
@@ -23,17 +24,15 @@ export function getSortedPostsData() {
     // id とデータをあわせる
     return {
       id,
-      ...matterResult.data,
+      ...(matterResult.data as { date: string; title: string })
     };
   });
   // 日付で投稿をソートする
-  return allPostsData.sort(({ date: a }, { date: b }) => {
-    if (a < b) {
-      return 1;
-    } else if (a > b) {
-      return -1;
+  return allPostsData.sort((a, b) => {
+    if (a.date < b.date) {
+      return 1
     } else {
-      return 0;
+      return -1
     }
   });
 }
@@ -69,10 +68,10 @@ export function getAllPostIds() {
   });
 }
 
-export async function getPostData(id) {
+export async function getPostData(id:any) {
   const fullPath = path.join(postsDirectory, `${id}.md`);
   const fileContents = fs.readFileSync(fullPath, 'utf8');
-
+  
   // gray-matter を使用してメタデータ部をパースする
   const matterResult = matter(fileContents);
 
